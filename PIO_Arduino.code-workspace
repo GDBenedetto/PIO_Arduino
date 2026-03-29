@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "01_Arduino-Digital-INPUT-OUTPUT",
+			"path": "01_Arduino-Digital-INPUT-OUTPUT"
+		},
+		{
+			"name": "02_PWM_and_digitalWrite",
+			"path": "02_PWM_and_digitalWrite"
+		},
+		{
+			"name": "03_analogRead_ Potentiometer",
+			"path": "03_analogRead_ Potentiometer"
+		},
+		{
+			"name": "04_ServoMotor_steuern",
+			"path": "04_ServoMotor_steuern"
+		}
+	],
+	"settings": {}
+}
