@@ -1,62 +1,74 @@
-#include <Arduino.h> // diese bibliothek führt zu einem fehler in thinkercad
+#include <Arduino.h>  // Grundlegende Arduino-Funktionen
 
-/*
-  I2C Slave Demo
-  i2c-slave-demo.ino
-  Demonstrate use of I2C bus
-  Slave receives character from Master and responds
-  DroneBot Workshop 2019
-  https://dronebotworkshop.com
-*/
-
-#include <Wire.h>
-
-// Define Slave I2C Address
-#define SLAVE_ADDR 9
-
-// Define Slave answer size
-#define ANSWERSIZE 5
-
-String answer = "Hello";
-
-// 🔧 Funktionsprototypen
-void requestEvent();
-void receiveEvent(int howMany);
+#include <Wire.h>  // I²C-Bibliothek
 
 void setup() {
+  Wire.begin(8);  
+  // Startet den I²C-Bus als SLAVE mit Adresse 8
+  // → Diese Adresse wird vom Master angesprochen
 
-  Wire.begin(SLAVE_ADDR);
-  
-  Wire.onRequest(requestEvent); 
-  Wire.onReceive(receiveEvent);
-  
+  Wire.onReceive(receiveEvent);  
+  // Registriert eine Funktion (Callback),
+  // die AUTOMATISCH aufgerufen wird,
+  // wenn Daten empfangen werden
+
   Serial.begin(9600);
-  Serial.println("I2C Slave Demonstration");
+  // Für Ausgabe im Serial Monitor
 }
 
-void receiveEvent(int howMany) {
 
-  while (Wire.available()) {
-    byte x = Wire.read();
-    Serial.println(x);
-  }
-  
-  Serial.println("Receive event");
-}
-
-void requestEvent() {
-
-  byte response[ANSWERSIZE];
-  
-  for (byte i = 0; i < ANSWERSIZE; i++) {
-    response[i] = (byte)answer.charAt(i);
-  }
-  
-  Wire.write(response, sizeof(response));
-  
-  Serial.println("Request event");
-}
 
 void loop() {
-  delay(50);
+  // Bleibt leer!
+  // → Wichtig: Empfang passiert über Interrupt/Callback
 }
+
+
+
+void receiveEvent(int numberOfBytes) {
+  // Diese Funktion wird aufgerufen,
+  // sobald Daten vom Master ankommen
+
+  Serial.print("Empfangen: ");
+
+  while (Wire.available()) {
+    // Prüft, ob noch Daten im Puffer sind
+
+    char c = Wire.read();
+    // Liest ein Byte aus dem I²C-Puffer
+
+    Serial.print(c);
+    // Gibt das empfangene Zeichen aus
+  }
+
+  Serial.println();
+}
+
+/*
+
+Was passiert intern?
+Master sendet Daten an Adresse (z. B. 8)
+Die I²C-Hardware im Slave erkennt:
+→ „Das ist meine Adresse!“
+Die Hardware speichert die Daten in einem Puffer
+Dann wird automatisch deine Funktion aufgerufen:
+
+void receiveEvent(int numberOfBytes)
+
+Wichtig:
+Das passiert nicht im loop()
+Sondern asynchron (im Hintergrund)
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
